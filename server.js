@@ -3,19 +3,20 @@ var router = express();
 var path = require("path");
 router.use(express.static("public"));
 var mysql = require("mysql");
-
+var bodyParser = require("body-parser");
 
 var server = require("http").Server(router);
 var io = require("socket.io")(server);
 server.listen(process.env.PORT || 3000)
 
-// var bordyParser = require("body-parser");
-// var urlencodeParser = bodyParser.urlencoded({extend:false});
+var bodyParserJson = bodyParser.json();
+var urlencodedParser = bodyParser.urlencoded({extended:false});
 //socket.io
 
 io.on("connection", function(socket){
   // res.send({hoten:"nguyen van teo"});
   console.log("da co nguoi connect" + socket.id);
+  
 })
 
 
@@ -73,4 +74,18 @@ router.get("/file",function(req,res){
       res.send(rows);
     }
   })
+})
+
+router.post("/user",urlencodedParser,bodyParserJson,function(req,res){
+  var username = req.body.username;
+  var password = req.body.password;
+  var email = req.body.email;
+  res.send("welcome"+ username+","+password+","+email);
+  // console.log(JSON.stringify(username));
+  // connection.query("INSERT INTO user (username,email,password) VALUES"+"('"+username+"','"+password+"','"+email+"')",function(error,result){
+  //   if (error) throw error;
+  //   console.log("1 record inserted");
+  //   // res.send("DA UPDATE ID = " + username);
+  // });
+ 
 })
